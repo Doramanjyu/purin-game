@@ -1,0 +1,4 @@
+*.swp
+.vite
+dist
+node_modules
