@@ -8,6 +8,8 @@ class Game {
 
   dir: number
   loaded?: boolean
+  mushSize: number
+  cnt: number
 
   constructor(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')
@@ -30,7 +32,9 @@ class Game {
     )
     sprite.src = spriteUrl
 
+    this.cnt = 0
     this.dir = 0
+    this.mushSize = 0
     this.pc = new Anime(sprite, {
       topLeft: [0, 0],
       sz: [40, 32],
@@ -81,10 +85,16 @@ class Game {
       return
     }
 
+    this.cnt++
+    const mushPat = [0, 1, 2, 1]
+    this.mushSize = mushPat[Math.floor(this.cnt / 50) % 4]
+
     this.pc.tick()
     this.pc.draw(this.ctx, [140, 128], 2, 0, 0)
     this.pc.draw(this.ctx, [140 + this.dir, 128], 2, 0, 1)
-    this.pc.draw(this.ctx, [140, 128], 2, 0, 2)
+    if (this.mushSize > 0) {
+      this.pc.draw(this.ctx, [140, 128], 2, 0, this.mushSize + 1)
+    }
   }
 }
 
