@@ -67,7 +67,9 @@ class Game {
           this.mush_size = this.mush_size >= 0 ? this.mush_size - 1 : 0
           break
         case 'Space':
-          this.state = 1
+          if (this.state === 0) {
+            this.state = 1
+          }
           break
       }
     }
@@ -81,7 +83,9 @@ class Game {
           this.dir = 0
           break
         case 'Space':
-          this.state = 2
+          if (this.state === 1) {
+            this.state = 2
+          }
           break
       }
     }
@@ -131,7 +135,7 @@ class Game {
         this.pc_jump.tick(0)
         break
       case 2:
-        if (this.pc_jump.tick() == 0) {
+        if (this.pc_jump.tick() === 0) {
           this.state = 0
         }
         break
