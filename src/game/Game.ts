@@ -101,7 +101,7 @@ class Game {
 
   tick() {
     this.ctx.fillStyle = 'black'
-    this.ctx.fillRect(0, 0, 640, 480)
+    this.ctx.fillRect(0, 0, 800, 600)
 
     if (!this.loaded) {
       return
@@ -110,18 +110,18 @@ class Game {
     switch (this.state) {
       case 0:
       case 1:
-        this.pc.draw(this.ctx, [140, 128], 2, 0, 0)
-        this.pc.draw(this.ctx, [140 + this.dir, 128], 2, 0, 1)
+        this.pc.draw(this.ctx, [115, 128], 3, 0, 0)
+        this.pc.draw(this.ctx, [115 + this.dir, 128], 3, 0, 1)
         if (this.mush_size > 0) {
-          this.pc.draw(this.ctx, [140, 128], 2, 0, this.mush_size + 1)
+          this.pc.draw(this.ctx, [115, 128], 3, 0, this.mush_size + 1)
         }
         break
       case 2: {
-        const y = [0, -8, -12, -16, -12, -8, 0][this.pc_jump.frame]
-        this.pc_jump.draw(this.ctx, [140, 128 + y], 2, 0, 0)
-        this.pc_jump.draw(this.ctx, [140, 128 + y], 2, 0, 1)
+        const y = [0, -16, -24, -32, -23, -16, 0][this.pc_jump.frame]
+        this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, 0)
+        this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, 1)
         if (this.mush_size > 0) {
-          this.pc_jump.draw(this.ctx, [140, 128 + y], 2, 0, this.mush_size + 1)
+          this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, this.mush_size + 1)
         }
         break
       }

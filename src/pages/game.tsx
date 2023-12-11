@@ -21,18 +21,17 @@ const GamePage = () => {
       <canvas
         ref={canvasRef}
         style={{
-          width: '640px',
-          height: '480px',
-          margin: '0 auto',
-          display: 'block',
+          maxWidth: '100%',
+          maxHeight: '100vh',
+          aspectRatio: '4/3',
         }}
         css={css`
           &:focus-visible {
             outline-style: none !important;
           }
         `}
-        width="640"
-        height="480"
+        width="800"
+        height="600"
       />
     </>
   )
