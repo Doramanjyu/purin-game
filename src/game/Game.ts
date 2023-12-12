@@ -1,4 +1,5 @@
 import Anime from './lib/Anime'
+import Sprite from './lib/Sprite'
 
 import spriteUrl from './sprite.png'
 
@@ -6,6 +7,7 @@ class Game {
   readonly ctx: CanvasRenderingContext2D
   readonly pc: Anime
   readonly pc_jump: Anime
+  readonly bg: Sprite
 
   dir: number
   state: number
@@ -45,6 +47,10 @@ class Game {
       topLeft: [240, 0],
       sz: [40, 32],
       frames: [0, 1, 2, 3, 4, 5],
+    })
+    this.bg = new Sprite(sprite, {
+      topLeft: [0, 128],
+      sz: [300, 200],
     })
   }
 
@@ -107,6 +113,8 @@ class Game {
       return
     }
 
+    this.bg.draw(this.ctx, [-30, 0], 3, 0, 0)
+
     switch (this.state) {
       case 0:
       case 1:
@@ -140,6 +148,7 @@ class Game {
         }
         break
     }
+    this.bg.draw(this.ctx, [-30, 0], 3, 0, 1)
   }
 }
 
