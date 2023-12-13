@@ -1,17 +1,14 @@
-import Anime from './lib/Anime'
 import Sprite from './lib/Sprite'
+
+import Purin from './Purin'
 
 import spriteUrl from './sprite.png'
 
 class Game {
   readonly ctx: CanvasRenderingContext2D
-  readonly pc: Anime
-  readonly pc_jump: Anime
   readonly bg: Sprite
+  readonly purin: Purin
 
-  dir: number
-  state: number
-  mush_size: number
   loaded?: boolean
 
   constructor(canvas: HTMLCanvasElement) {
@@ -35,19 +32,7 @@ class Game {
     )
     sprite.src = spriteUrl
 
-    this.dir = 0
-    this.mush_size = 2
-    this.state = 0
-    this.pc = new Anime(sprite, {
-      topLeft: [0, 0],
-      sz: [40, 32],
-      frames: [0, 1, 0, 0, 0, 0, 2, 3, 4, 5, 4, 4, 3, 2],
-    })
-    this.pc_jump = new Anime(sprite, {
-      topLeft: [240, 0],
-      sz: [40, 32],
-      frames: [0, 1, 2, 3, 4, 5],
-    })
+    this.purin = new Purin(sprite)
     this.bg = new Sprite(sprite, {
       topLeft: [0, 128],
       sz: [300, 200],
@@ -61,21 +46,19 @@ class Game {
       e.preventDefault()
       switch (e.code) {
         case 'ArrowLeft':
-          this.dir = -3
+          this.purin.direct(-3)
           break
         case 'ArrowRight':
-          this.dir = 3
+          this.purin.direct(3)
           break
         case 'ArrowUp':
-          this.mush_size = this.mush_size < 2 ? this.mush_size + 1 : 2
+          this.purin.mush((s) => s + 1)
           break
         case 'ArrowDown':
-          this.mush_size = this.mush_size >= 0 ? this.mush_size - 1 : 0
+          this.purin.mush((s) => s - 1)
           break
         case 'Space':
-          if (this.state === 0) {
-            this.state = 1
-          }
+          this.purin.crouch()
           break
       }
     }
@@ -83,15 +66,11 @@ class Game {
       e.preventDefault()
       switch (e.code) {
         case 'ArrowLeft':
-          this.dir = 0
-          break
         case 'ArrowRight':
-          this.dir = 0
+          this.purin.direct(0)
           break
         case 'Space':
-          if (this.state === 1) {
-            this.state = 2
-          }
+          this.purin.jump()
           break
       }
     }
@@ -114,41 +93,10 @@ class Game {
     }
 
     this.bg.draw(this.ctx, [-30, 0], 3, 0, 0)
-
-    switch (this.state) {
-      case 0:
-      case 1:
-        this.pc.draw(this.ctx, [115, 128], 3, 0, 0)
-        this.pc.draw(this.ctx, [115 + this.dir, 128], 3, 0, 1)
-        if (this.mush_size > 0) {
-          this.pc.draw(this.ctx, [115, 128], 3, 0, this.mush_size + 1)
-        }
-        break
-      case 2: {
-        const y = [0, -16, -24, -32, -23, -16, 0][this.pc_jump.frame]
-        this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, 0)
-        this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, 1)
-        if (this.mush_size > 0) {
-          this.pc_jump.draw(this.ctx, [115, 128 + y], 3, 0, this.mush_size + 1)
-        }
-        break
-      }
-    }
-    switch (this.state) {
-      case 0:
-        this.pc.tick()
-        break
-      case 1:
-        this.pc.tick(10)
-        this.pc_jump.tick(0)
-        break
-      case 2:
-        if (this.pc_jump.tick() === 0) {
-          this.state = 0
-        }
-        break
-    }
+    this.purin.draw(this.ctx, [115, 128], 3)
     this.bg.draw(this.ctx, [-30, 0], 3, 0, 1)
+
+    this.purin.tick()
   }
 }
 
