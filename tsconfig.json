@@ -11,7 +11,7 @@
     "noEmit": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "types": ["@emotion/react/types/css-prop"],
+    "types": ["@emotion/react/types/css-prop", "jest"],
     "paths": {
       "@doramanjyu/purin-game/*": [
         "./src/*"
