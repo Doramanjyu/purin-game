@@ -1,5 +1,6 @@
 import Anime from './lib/Anime'
 import { Vec2 } from './lib/vec'
+import { Frame, UniversalFrame } from './lib/coords'
 
 enum State {
   Idle,
@@ -14,11 +15,16 @@ class Purin {
   mush_size: number
   dir: number
   state: State
+  frame: Frame
 
-  constructor(sprite: HTMLImageElement) {
+  private draw_frame: Frame
+
+  constructor(sprite: HTMLImageElement, parent: UniversalFrame) {
     this.dir = 0
     this.mush_size = 2
     this.state = State.Idle
+    this.frame = new Frame('purin', parent)
+    this.draw_frame = new Frame('purin_draw', this.frame, [-20, -32])
 
     this.aidle = new Anime(sprite, {
       topLeft: [0, 0],
@@ -70,7 +76,8 @@ class Purin {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, p: Vec2, scale: number) {
+  draw(ctx: CanvasRenderingContext2D, f: Frame, scale: number) {
+    const p = this.frame.from(f)
     switch (this.state) {
       case State.Idle:
       case State.Crouching:

@@ -1,4 +1,5 @@
 import Sprite from './lib/Sprite'
+import { Frame, Root } from './lib/coords'
 
 import Purin from './Purin'
 
@@ -8,6 +9,8 @@ class Game {
   readonly ctx: CanvasRenderingContext2D
   readonly bg: Sprite
   readonly purin: Purin
+  readonly origin: Frame
+  readonly viewpoint: Frame
 
   loaded?: boolean
 
@@ -18,6 +21,9 @@ class Game {
     }
     this.ctx = ctx
     this.ctx.imageSmoothingEnabled = false
+
+    this.origin = new Frame('origin', Root)
+    this.viewpoint = new Frame('viewpoint', this.origin, [-115, -128])
 
     const sprite = new Image()
     sprite.addEventListener(
@@ -32,7 +38,7 @@ class Game {
     )
     sprite.src = spriteUrl
 
-    this.purin = new Purin(sprite)
+    this.purin = new Purin(sprite, this.origin)
     this.bg = new Sprite(sprite, {
       topLeft: [0, 128],
       sz: [300, 200],
@@ -47,9 +53,11 @@ class Game {
       switch (e.code) {
         case 'ArrowLeft':
           this.purin.direct(-3)
+          this.purin.frame.pos[0] -= 3
           break
         case 'ArrowRight':
           this.purin.direct(3)
+          this.purin.frame.pos[0] += 3
           break
         case 'ArrowUp':
           this.purin.mush((s) => s + 1)
@@ -93,7 +101,7 @@ class Game {
     }
 
     this.bg.draw(this.ctx, [-30, 0], 3, 0, 0)
-    this.purin.draw(this.ctx, [115, 128], 3)
+    this.purin.draw(this.ctx, this.viewpoint, 3)
     this.bg.draw(this.ctx, [-30, 0], 3, 0, 1)
 
     this.purin.tick()
