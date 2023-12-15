@@ -39,15 +39,12 @@ export class Frame extends UniversalFrame {
   }
 
   from(frame: UniversalFrame): Vec2 {
-    var out: Vec2 = [0, 0]
+    let out: Vec2 = [0, 0]
 
     let a: UniversalFrame = frame
-    let b: UniversalFrame = this
+    let b: UniversalFrame = this // eslint-disable-line @typescript-eslint/no-this-alias
 
-    while (true) {
-      if (a === b) {
-        return out
-      }
+    while (a !== b) {
       const al = a.level()
       const bl = b.level()
       if (al >= bl) {
@@ -65,6 +62,7 @@ export class Frame extends UniversalFrame {
         b = b.parent
       }
     }
+    return out
   }
 }
 
