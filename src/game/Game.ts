@@ -8,12 +8,15 @@ import spriteUrl from './sprite.png'
 class Game {
   readonly ctx: CanvasRenderingContext2D
   readonly bg: Sprite
+  readonly title: Sprite
   readonly purin: Purin
   readonly origin: Frame
   readonly viewpoint: Frame
 
   loaded?: boolean
   scale: number
+  title_y: number
+  cnt: number
 
   constructor(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')
@@ -45,6 +48,12 @@ class Game {
       topLeft: [0, 128],
       sz: [300, 200],
     })
+    this.title = new Sprite(sprite, {
+      topLeft: [0, 328],
+      sz: [173, 64],
+    })
+    this.title_y = -48
+    this.cnt = 0
   }
 
   start() {
@@ -107,9 +116,18 @@ class Game {
 
     this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 0)
     this.purin.draw(this.ctx, this.viewpoint, this.scale)
-    this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 1)
+    this.bg.draw(this.ctx, [-30, 0], this.scale, 1, 0)
+    this.title.draw(
+      this.ctx,
+      [48, this.title_y + (this.cnt % 48 === 0 ? -1 : 0)],
+      this.scale,
+      0,
+      0,
+    )
+    this.title_y = this.title_y >= 32 ? 32 : this.title_y + 2
 
     this.purin.tick()
+    this.cnt++
   }
 }
 
