@@ -1,5 +1,4 @@
 import Anime from './lib/Anime'
-import { Vec2 } from './lib/vec'
 import { Frame, UniversalFrame } from './lib/coords'
 
 enum State {
@@ -8,23 +7,27 @@ enum State {
   Jumping,
 }
 
+const jump_y = [0, -16, -24, -32, -23, -16, 0]
+
 class Purin {
   readonly aidle: Anime
   readonly ajump: Anime
 
   mush_size: number
-  dir: number
   state: State
+  floor_frame: Frame
   frame: Frame
 
   private draw_frame: Frame
+  private face_frame: Frame
 
   constructor(sprite: HTMLImageElement, parent: UniversalFrame) {
-    this.dir = 0
     this.mush_size = 2
     this.state = State.Idle
-    this.frame = new Frame('purin', parent)
+    this.floor_frame = new Frame('purin_floor', parent)
+    this.frame = new Frame('purin', this.floor_frame)
     this.draw_frame = new Frame('purin_draw', this.frame, [-20, -32])
+    this.face_frame = new Frame('purin_face', this.draw_frame)
 
     this.aidle = new Anime(sprite, {
       topLeft: [0, 0],
@@ -39,7 +42,7 @@ class Purin {
   }
 
   direct(d: number) {
-    this.dir = d
+    this.face_frame.pos = [d, 0]
   }
 
   mush(i: number | ((s: number) => number)) {
@@ -69,31 +72,31 @@ class Purin {
         this.ajump.tick(0)
         break
       case State.Jumping:
+        this.floor_frame.pos = [0, jump_y[this.ajump.frame]]
         if (this.ajump.tick() === 0) {
           this.state = State.Idle
+          this.floor_frame.pos = [0, 0]
         }
         break
     }
   }
 
   draw(ctx: CanvasRenderingContext2D, f: Frame, scale: number) {
-    const p = this.frame.from(f)
+    const p = this.draw_frame.from(f)
     switch (this.state) {
       case State.Idle:
       case State.Crouching:
         this.aidle.draw(ctx, p, scale, 0, 0)
-        this.aidle.draw(ctx, [p[0] + this.dir, p[1]], scale, 0, 1)
+        this.aidle.draw(ctx, this.face_frame.from(f), scale, 0, 1)
         if (this.mush_size > 0) {
           this.aidle.draw(ctx, p, scale, 0, this.mush_size + 1)
         }
         break
       case State.Jumping: {
-        const y = [0, -16, -24, -32, -23, -16, 0][this.ajump.frame]
-        const p2: Vec2 = [p[0], p[1] + y]
-        this.ajump.draw(ctx, p2, scale, 0, 0)
-        this.ajump.draw(ctx, p2, scale, 0, 1)
+        this.ajump.draw(ctx, p, scale, 0, 0)
+        this.ajump.draw(ctx, p, scale, 0, 1)
         if (this.mush_size > 0) {
-          this.ajump.draw(ctx, p2, scale, 0, this.mush_size + 1)
+          this.ajump.draw(ctx, p, scale, 0, this.mush_size + 1)
         }
         break
       }
