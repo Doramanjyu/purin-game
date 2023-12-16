@@ -1,5 +1,6 @@
 import Anime from './lib/Anime'
 import { Frame, UniversalFrame } from './lib/coords'
+import { Vec2 } from './lib/vec'
 
 enum State {
   Idle,
@@ -29,6 +30,7 @@ class Purin {
     this.frame = new Frame('purin', this.floor_frame)
     this.draw_frame = new Frame('purin_draw', this.frame, [-20, -32])
     this.face_frame = new Frame('purin_face', this.draw_frame)
+    this.jump_vec = [0, 0]
 
     this.aidle = new Anime(sprite, {
       topLeft: [0, 0],
