@@ -60,6 +60,12 @@ class Game {
     const tickTimer = setInterval(this.tick.bind(this), 50)
 
     const keydown = (e: KeyboardEvent) => {
+      switch (e.code) {
+        case 'F5':
+        case 'F11':
+        case 'Escape':
+          return
+      }
       e.preventDefault()
       if (e.repeat) {
         return
@@ -86,7 +92,6 @@ class Game {
       }
     }
     const keyup = (e: KeyboardEvent) => {
-      e.preventDefault()
       switch (e.code) {
         case 'ArrowLeft':
         case 'ArrowRight':
