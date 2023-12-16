@@ -1,5 +1,6 @@
 import Anime from './lib/Anime'
 import { Frame, UniversalFrame } from './lib/coords'
+import { Vec2 } from './lib/vec'
 
 enum State {
   Idle,
@@ -20,6 +21,7 @@ class Purin {
 
   private draw_frame: Frame
   private face_frame: Frame
+  private jump_vec: Vec2
 
   constructor(sprite: HTMLImageElement, parent: UniversalFrame) {
     this.mush_size = 2
@@ -28,6 +30,7 @@ class Purin {
     this.frame = new Frame('purin', this.floor_frame)
     this.draw_frame = new Frame('purin_draw', this.frame, [-20, -32])
     this.face_frame = new Frame('purin_face', this.draw_frame)
+    this.jump_vec = [0, 0]
 
     this.aidle = new Anime(sprite, {
       topLeft: [0, 0],
@@ -59,6 +62,7 @@ class Purin {
   jump() {
     if (this.state === State.Crouching) {
       this.state = State.Jumping
+      this.jump_vec = this.face_frame.pos
     }
   }
 
@@ -72,10 +76,12 @@ class Purin {
         this.ajump.tick(0)
         break
       case State.Jumping:
-        this.floor_frame.pos = [0, jump_y[this.ajump.frame]]
+        this.floor_frame.pos[1] = jump_y[this.ajump.frame]
+        this.floor_frame.pos[0] += this.jump_vec[0]
         if (this.ajump.tick() === 0) {
           this.state = State.Idle
-          this.floor_frame.pos = [0, 0]
+          this.floor_frame.pos[1] = 0
+          this.jump_vec = [0, 0]
         }
         break
     }
