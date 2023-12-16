@@ -62,7 +62,7 @@ class Purin {
   jump() {
     if (this.state === State.Crouching) {
       this.state = State.Jumping
-      this.jump_vec = this.face_frame.pos
+      this.jump_vec = [this.face_frame.pos[0] * 2, 0]
     }
   }
 
@@ -99,10 +99,11 @@ class Purin {
         }
         break
       case State.Jumping: {
-        this.ajump.draw(ctx, p, scale, 0, 0)
-        this.ajump.draw(ctx, p, scale, 0, 1)
+        const jump_mode = this.jump_vec[0] > 0 ? 0 : 1
+        this.ajump.draw(ctx, p, scale, jump_mode, 0)
+        this.ajump.draw(ctx, p, scale, jump_mode, 1)
         if (this.mush_size > 0) {
-          this.ajump.draw(ctx, p, scale, 0, this.mush_size + 1)
+          this.ajump.draw(ctx, p, scale, jump_mode, this.mush_size + 1)
         }
         break
       }
