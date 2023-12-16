@@ -13,6 +13,7 @@ class Game {
   readonly viewpoint: Frame
 
   loaded?: boolean
+  scale: number
 
   constructor(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')
@@ -23,7 +24,8 @@ class Game {
     this.ctx.imageSmoothingEnabled = false
 
     this.origin = new Frame('origin', Root)
-    this.viewpoint = new Frame('viewpoint', this.origin, [-115, -128])
+    this.viewpoint = new Frame('viewpoint', this.origin, [-135, -160])
+    this.scale = 3
 
     const sprite = new Image()
     sprite.addEventListener(
@@ -100,9 +102,9 @@ class Game {
       return
     }
 
-    this.bg.draw(this.ctx, [-30, 0], 3, 0, 0)
-    this.purin.draw(this.ctx, this.viewpoint, 3)
-    this.bg.draw(this.ctx, [-30, 0], 3, 0, 1)
+    this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 0)
+    this.purin.draw(this.ctx, this.viewpoint, this.scale)
+    this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 1)
 
     this.purin.tick()
   }
