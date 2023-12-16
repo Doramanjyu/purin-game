@@ -1,5 +1,4 @@
 import Anime from './lib/Anime'
-import { Vec2 } from './lib/vec'
 import { Frame, UniversalFrame } from './lib/coords'
 
 enum State {
@@ -7,6 +6,8 @@ enum State {
   Crouching,
   Jumping,
 }
+
+const jump_y = [0, -16, -24, -32, -23, -16, 0]
 
 class Purin {
   readonly aidle: Anime
@@ -71,8 +72,7 @@ class Purin {
         this.ajump.tick(0)
         break
       case State.Jumping:
-        const y = [0, -16, -24, -32, -23, -16, 0][this.ajump.frame]
-        this.floor_frame.pos = [0, y]
+        this.floor_frame.pos = [0, jump_y[this.ajump.frame]]
         if (this.ajump.tick() === 0) {
           this.state = State.Idle
           this.floor_frame.pos = [0, 0]
