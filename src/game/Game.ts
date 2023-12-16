@@ -52,14 +52,15 @@ class Game {
 
     const keydown = (e: KeyboardEvent) => {
       e.preventDefault()
+      if (e.repeat) {
+        return
+      }
       switch (e.code) {
         case 'ArrowLeft':
           this.purin.direct(-3)
-          this.purin.frame.pos[0] -= 3
           break
         case 'ArrowRight':
           this.purin.direct(3)
-          this.purin.frame.pos[0] += 3
           break
         case 'ArrowUp':
           this.purin.mush((s) => s + 1)
