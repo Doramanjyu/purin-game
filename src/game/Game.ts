@@ -2,6 +2,7 @@ import Sprite from './lib/Sprite'
 import { Frame, Root } from './lib/coords'
 
 import Purin from './Purin'
+import Item from './Item'
 
 import spriteUrl from './sprite.png'
 
@@ -10,6 +11,7 @@ class Game {
   readonly bg: Sprite
   readonly title: Sprite
   readonly purin: Purin
+  readonly item: Item
   readonly origin: Frame
   readonly viewpoint: Frame
 
@@ -44,12 +46,13 @@ class Game {
     sprite.src = spriteUrl
 
     this.purin = new Purin(sprite, this.origin)
+    this.item = new Item(sprite, this.origin, [35, 0])
     this.bg = new Sprite(sprite, {
-      topLeft: [0, 128],
+      topLeft: [0, 256],
       sz: [300, 200],
     })
     this.title = new Sprite(sprite, {
-      topLeft: [0, 328],
+      topLeft: [0, 456],
       sz: [173, 64],
     })
     this.title_y = -48
@@ -120,6 +123,7 @@ class Game {
     }
 
     this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 0)
+    this.item.draw(this.ctx, this.viewpoint, this.scale)
     this.purin.draw(this.ctx, this.viewpoint, this.scale)
     this.bg.draw(this.ctx, [-30, 0], this.scale, 1, 0)
     this.title.draw(
@@ -132,6 +136,7 @@ class Game {
     this.title_y = this.title_y >= 32 ? 32 : this.title_y + 2
 
     this.purin.tick()
+    this.item.tick()
     this.cnt++
   }
 }
