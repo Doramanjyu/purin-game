@@ -123,8 +123,8 @@ class Game {
     }
 
     this.bg.draw(this.ctx, [-30, 0], this.scale, 0, 0)
-    this.purin.draw(this.ctx, this.viewpoint, this.scale)
     this.item.draw(this.ctx, this.viewpoint, this.scale)
+    this.purin.draw(this.ctx, this.viewpoint, this.scale)
     this.bg.draw(this.ctx, [-30, 0], this.scale, 1, 0)
     this.title.draw(
       this.ctx,

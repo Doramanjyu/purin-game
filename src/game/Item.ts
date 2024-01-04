@@ -5,11 +5,13 @@ import { Vec2 } from './lib/vec'
 class Item {
   readonly sprite: Sprite
 
-  size: number
   frame: Frame
 
   private draw_frame: Frame
   private cnt: number
+  private wait: number
+  private size: number
+  private type: number
 
   constructor(sprite: HTMLImageElement, parent: UniversalFrame, pos: Vec2) {
     this.size = 0
@@ -22,24 +24,36 @@ class Item {
     })
 
     this.cnt = 0
+    this.random()
+  }
+
+  random() {
+    this.size = 0
+    this.wait = 20 + Math.floor(Math.random() * 60)
+    this.frame.pos[0] = Math.floor(Math.random() * 200 - 100)
+    this.type = Math.floor(Math.random() * 2)
   }
 
   tick() {
+    if (this.wait > 0) {
+      this.wait--
+      return
+    }
     this.cnt++
-    if (this.cnt % 50 === 0) {
+    if (this.cnt % 3 === 0) {
       this.size++
-      if (this.size > 4) {
-        this.size = 0
+      if (this.size > 3) {
+        this.random()
       }
     }
   }
 
   draw(ctx: CanvasRenderingContext2D, f: Frame, scale: number) {
-    if (this.size === 0) {
+    if (this.wait > 0) {
       return
     }
     const p = this.draw_frame.from(f)
-    this.sprite.draw(ctx, p, scale, this.size - 1, 1)
+    this.sprite.draw(ctx, p, scale, this.size, this.type)
   }
 }
 
