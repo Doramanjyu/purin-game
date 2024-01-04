@@ -10,7 +10,6 @@ class Mush {
   frame: Frame
 
   private draw_frame: Frame
-  private cnt: number
   private wait: number
   private size: number
   private type: number
