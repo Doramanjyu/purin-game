@@ -1,5 +1,6 @@
 import Scene from './Scene'
 import TitleScene from './TitleScene'
+import GameScene from './GameScene'
 
 import spriteUrl from './sprite.png'
 
@@ -31,6 +32,15 @@ class Game {
     sprite.src = spriteUrl
 
     this.scene = new TitleScene(sprite)
+    this.scene.changescene = (s: string) => {
+      const change = this.scene.changescene
+      switch (s) {
+        case 'game':
+          this.scene = new GameScene(sprite)
+          break
+      }
+      this.scene.changescene = change
+    }
   }
 
   start() {
