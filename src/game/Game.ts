@@ -31,16 +31,23 @@ class Game {
     )
     sprite.src = spriteUrl
 
-    this.scene = new TitleScene(sprite)
-    this.scene.changescene = (s: string) => {
-      const change = this.scene.changescene
+    const scenes = {
+      title: new TitleScene(sprite),
+      game: new GameScene(sprite),
+    }
+    const changescene = (s: string) => {
       switch (s) {
+        case 'title':
+          this.scene = scenes.title
+          break
         case 'game':
-          this.scene = new GameScene(sprite)
+          this.scene = scenes.game
           break
       }
-      this.scene.changescene = change
+      this.scene.changescene = changescene
     }
+    this.scene = scenes.title // Workaround typecheck
+    changescene('title')
   }
 
   start() {
