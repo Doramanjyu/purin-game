@@ -41,12 +41,6 @@ class GameScene implements Scene {
         this.purin.direct(3)
         this.purin.crouch()
         break
-      case 'ArrowUp':
-        this.purin.mush((s) => s + 1)
-        break
-      case 'ArrowDown':
-        this.purin.mush((s) => s - 1)
-        break
       case 'Space':
         this.purin.direct(0)
         this.purin.crouch()
