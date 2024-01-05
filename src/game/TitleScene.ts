@@ -38,16 +38,6 @@ class TitleScene implements Scene {
 
   onkeydown(e: KeyboardEvent) {
     switch (e.code) {
-      case 'F5':
-      case 'F11':
-      case 'Escape':
-        return
-    }
-    e.preventDefault()
-    if (e.repeat) {
-      return
-    }
-    switch (e.code) {
       case 'ArrowLeft':
         this.purin.direct(-3)
         this.purin.crouch()

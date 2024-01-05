@@ -36,7 +36,19 @@ class Game {
   start() {
     const tickTimer = setInterval(this.tick.bind(this), 50)
 
-    const keydown = (e: KeyboardEvent) => this.scene.onkeydown(e)
+    const keydown = (e: KeyboardEvent) => {
+      switch (e.code) {
+        case 'F5':
+        case 'F11':
+        case 'Escape':
+          return
+      }
+      e.preventDefault()
+      if (e.repeat) {
+        return
+      }
+      this.scene.onkeydown(e)
+    }
     const keyup = (e: KeyboardEvent) => this.scene.onkeyup(e)
     document.addEventListener('keydown', keydown)
     document.addEventListener('keyup', keyup)
