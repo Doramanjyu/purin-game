@@ -5,8 +5,6 @@ import Purin from './Purin'
 import Mush from './Mush'
 import Scene from './Scene'
 
-import spriteUrl from './sprite.png'
-
 class TitleScene implements Scene {
   readonly bg: Sprite
   readonly title: Sprite
@@ -19,23 +17,10 @@ class TitleScene implements Scene {
   private title_y: number
   private cnt: number
 
-  constructor() {
+  constructor(sprite: HTMLImageElement) {
     this.origin = new Frame('origin', Root)
     this.viewpoint = new Frame('viewpoint', this.origin, [-135, -160])
     this.scale = 3
-
-    const sprite = new Image()
-    sprite.addEventListener(
-      'load',
-      () => {
-        this.loaded = true
-      },
-      {
-        capture: false,
-        once: true,
-      },
-    )
-    sprite.src = spriteUrl
 
     this.purin = new Purin(sprite, this.origin)
     this.mush = new Mush(sprite, this.origin, [35, 0])
@@ -104,10 +89,6 @@ class TitleScene implements Scene {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, 800, 600)
-
-    if (!this.loaded) {
-      return
-    }
 
     this.bg.draw(ctx, [-30, 0], this.scale, 0, 0)
     this.purin.draw(ctx, this.viewpoint, this.scale)

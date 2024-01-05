@@ -1,6 +1,8 @@
 import Scene from './Scene'
 import TitleScene from './TitleScene'
 
+import spriteUrl from './sprite.png'
+
 class Game {
   readonly ctx: CanvasRenderingContext2D
 
@@ -15,7 +17,20 @@ class Game {
     this.ctx = ctx
     this.ctx.imageSmoothingEnabled = false
 
-    this.scene = new TitleScene()
+    const sprite = new Image()
+    sprite.addEventListener(
+      'load',
+      () => {
+        this.loaded = true
+      },
+      {
+        capture: false,
+        once: true,
+      },
+    )
+    sprite.src = spriteUrl
+
+    this.scene = new TitleScene(sprite)
   }
 
   start() {
@@ -34,6 +49,10 @@ class Game {
   }
 
   tick() {
+    if (!this.loaded) {
+      return
+    }
+
     this.scene.draw(this.ctx)
     this.scene.tick()
   }
