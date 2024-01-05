@@ -4,8 +4,13 @@ import { Frame, Root } from './lib/coords'
 import Purin from './Purin'
 import Scene from './Scene'
 
+enum State {
+  Init,
+  Wait,
+  Fade,
+}
+
 class TitleScene implements Scene {
-  readonly bg: Sprite
   readonly title: Sprite
   readonly purin: Purin
   readonly origin: Frame
@@ -13,24 +18,26 @@ class TitleScene implements Scene {
 
   private title_y: number
   private cnt: number
+  private fade: number
+  private state: State
 
   changescene?: (s: string) => void
 
   constructor(sprite: HTMLImageElement) {
     this.origin = new Frame('origin', Root)
-    this.viewpoint = new Frame('viewpoint', this.origin, [-135, -160])
+    this.viewpoint = new Frame('viewpoint', this.origin, [-103, -130])
 
     this.purin = new Purin(sprite, this.origin)
-    this.bg = new Sprite(sprite, {
-      topLeft: [0, 256],
-      sz: [301, 200],
-    })
+    this.purin.mush(2)
     this.title = new Sprite(sprite, {
       topLeft: [0, 456],
       sz: [173, 64],
     })
     this.title_y = -48
     this.cnt = 0
+    this.fade = 0
+
+    this.state = State.Init
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -40,33 +47,57 @@ class TitleScene implements Scene {
     switch (e.code) {
       case 'Space':
       case 'Enter':
-        if (this.changescene) {
-          this.changescene('game')
+        if (this.state === State.Wait) {
+          this.state = State.Fade
         }
     }
   }
 
   tick() {
-    this.purin.tick()
+    switch (this.state) {
+      case State.Init:
+        this.title_y += 2
+        if (this.title_y >= 20) {
+          this.title_y = 20
+          this.state = State.Wait
+        }
+        break
+      case State.Wait:
+        break
+      case State.Fade:
+        this.fade += 0.2
+        if (this.fade >= 1.5 && this.changescene) {
+          this.changescene('game')
+        }
+        break
+    }
+    if (this.cnt % 100 === 0) {
+      this.purin.crouch()
+    } else if (this.cnt % 100 === 4) {
+      this.purin.jump()
+    }
     this.cnt++
-    this.title_y = this.title_y >= 32 ? 32 : this.title_y + 2
+    this.purin.tick()
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    ctx.globalAlpha = 1.0
     ctx.fillStyle = 'black'
     ctx.fillRect(0, 0, 800, 600)
 
-    const scale = 3
-    this.bg.draw(ctx, [-30, 0], scale, 0, 0)
+    const scale = 4
     this.purin.draw(ctx, this.viewpoint, scale)
-    this.bg.draw(ctx, [-30, 0], scale, 1, 0)
     this.title.draw(
       ctx,
-      [48, this.title_y + (this.cnt % 48 === 0 ? -1 : 0)],
+      [14, this.title_y + (this.cnt % 48 === 0 ? -1 : 0)],
       scale,
       0,
       0,
     )
+
+    ctx.globalAlpha = Math.min(1, this.fade)
+    ctx.fillStyle = 'black'
+    ctx.fillRect(0, 0, 800, 600)
   }
 }
 

@@ -24,7 +24,7 @@ class Purin {
   private jump_vec: Vec2
 
   constructor(sprite: HTMLImageElement, parent: UniversalFrame) {
-    this.mush_size = 2
+    this.mush_size = 0
     this.state = State.Idle
     this.floor_frame = new Frame('purin_floor', parent)
     this.frame = new Frame('purin', this.floor_frame)
