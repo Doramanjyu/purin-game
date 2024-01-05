@@ -56,7 +56,7 @@ class TitleScene implements Scene {
   tick() {
     switch (this.state) {
       case State.Init:
-        this.title_y += 2
+        this.title_y += 3
         if (this.title_y >= 20) {
           this.title_y = 20
           this.state = State.Wait
@@ -65,8 +65,10 @@ class TitleScene implements Scene {
       case State.Wait:
         break
       case State.Fade:
-        this.fade += 0.2
-        if (this.fade >= 1.5 && this.changescene) {
+        if (this.cnt % 2 === 0) {
+          this.fade += 0.2
+        }
+        if (this.fade >= 1.2 && this.changescene) {
           this.changescene('game')
         }
         break
