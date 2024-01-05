@@ -12,6 +12,7 @@ enum State {
 
 class TitleScene implements Scene {
   readonly title: Sprite
+  readonly hit: Sprite
   readonly purin: Purin
   readonly origin: Frame
   readonly viewpoint: Frame
@@ -25,13 +26,17 @@ class TitleScene implements Scene {
 
   constructor(sprite: HTMLImageElement) {
     this.origin = new Frame('origin', Root)
-    this.viewpoint = new Frame('viewpoint', this.origin, [-103, -130])
+    this.viewpoint = new Frame('viewpoint', this.origin, [-101, -130])
 
     this.purin = new Purin(sprite, this.origin)
     this.purin.mush(2)
     this.title = new Sprite(sprite, {
       topLeft: [0, 456],
-      sz: [173, 64],
+      sz: [173, 45],
+    })
+    this.hit = new Sprite(sprite, {
+      topLeft: [0, 501],
+      sz: [56, 7],
     })
     this.title_y = -48
     this.cnt = 0
@@ -89,13 +94,12 @@ class TitleScene implements Scene {
 
     const scale = 4
     this.purin.draw(ctx, this.viewpoint, scale)
-    this.title.draw(
-      ctx,
-      [14, this.title_y + (this.cnt % 48 === 0 ? -1 : 0)],
-      scale,
-      0,
-      0,
-    )
+    const shift = this.cnt % 48 === 0 ? -1 : 0
+    this.title.draw(ctx, [14, this.title_y + shift], scale, 0, 0)
+
+    if (this.state === State.Wait && this.cnt % 28 != 0) {
+      this.hit.draw(ctx, [72, 78], scale, 0, 0)
+    }
 
     ctx.globalAlpha = Math.min(1, this.fade)
     ctx.fillStyle = 'black'
