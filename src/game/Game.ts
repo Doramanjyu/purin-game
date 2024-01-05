@@ -1,5 +1,5 @@
 import Scene from './Scene'
-import Title from './Title'
+import TitleScene from './TitleScene'
 
 class Game {
   readonly ctx: CanvasRenderingContext2D
@@ -15,7 +15,7 @@ class Game {
     this.ctx = ctx
     this.ctx.imageSmoothingEnabled = false
 
-    this.scene = new Title()
+    this.scene = new TitleScene()
   }
 
   start() {

@@ -7,7 +7,7 @@ import Scene from './Scene'
 
 import spriteUrl from './sprite.png'
 
-class Title implements Scene {
+class TitleScene implements Scene {
   readonly bg: Sprite
   readonly title: Sprite
   readonly purin: Purin
@@ -124,4 +124,4 @@ class Title implements Scene {
   }
 }
 
-export default Title
+export default TitleScene
