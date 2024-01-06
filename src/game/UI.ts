@@ -1,7 +1,7 @@
 import Sprite from './lib/Sprite'
 import { Vec2 } from './lib/vec'
 
-class GameScene implements Scene {
+class UI {
   readonly bar: Sprite
   readonly item: Sprite
 
@@ -40,4 +40,4 @@ class GameScene implements Scene {
   }
 }
 
-export default GameScene
+export default UI
