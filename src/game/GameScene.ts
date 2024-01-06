@@ -4,6 +4,7 @@ import { Frame, Root } from './lib/coords'
 import Purin from './Purin'
 import Mush from './Mush'
 import Scene from './Scene'
+import UI from './UI'
 
 class GameScene implements Scene {
   readonly bg: Sprite
@@ -11,9 +12,7 @@ class GameScene implements Scene {
   readonly mush: Mush
   readonly origin: Frame
   readonly viewpoint: Frame
-
-  readonly ui_bar: Sprite
-  readonly ui_item: Sprite
+  readonly ui: UI
 
   private scale: number
   private cnt: number
@@ -31,15 +30,7 @@ class GameScene implements Scene {
       topLeft: [0, 256],
       sz: [301, 200],
     })
-
-    this.ui_bar = new Sprite(sprite, {
-      topLeft: [0, 508],
-      sz: [32, 6],
-    })
-    this.ui_item = new Sprite(sprite, {
-      topLeft: [0, 514],
-      sz: [10, 10],
-    })
+    this.ui = new UI(sprite)
 
     this.cnt = 0
   }
@@ -75,6 +66,7 @@ class GameScene implements Scene {
   tick() {
     this.purin.tick()
     this.mush.tick()
+    this.ui.tick()
     this.cnt++
   }
 
@@ -87,11 +79,7 @@ class GameScene implements Scene {
     this.mush.draw(ctx, this.viewpoint, this.scale)
     this.bg.draw(ctx, [-30, 0], this.scale, 1, 0)
 
-    this.ui_bar.draw(ctx, [12, 8], this.scale, 1, 0)
-    const items = [1, 0, 0]
-    for (let i = 0; i < 3; i++) {
-      this.ui_item.draw(ctx, [12 + i * 11, 15], this.scale, items[i], 0)
-    }
+    this.ui.draw(ctx)
   }
 }
 
