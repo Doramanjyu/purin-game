@@ -61,7 +61,7 @@ class TitleScene implements Scene {
   tick() {
     switch (this.state) {
       case State.Init:
-        this.title_y += 3
+        this.title_y += 6
         if (this.title_y >= 20) {
           this.title_y = 20
           this.state = State.Wait
