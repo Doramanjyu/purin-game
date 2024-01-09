@@ -8,7 +8,7 @@ enum State {
   Jumping,
 }
 
-const jump_y = [0, -16, -24, -32, -23, -16, 0]
+const jump_max = 4
 
 class Purin {
   readonly aidle: Anime
@@ -22,6 +22,7 @@ class Purin {
   private draw_frame: Frame
   private face_frame: Frame
   private jump_vec: Vec2
+  private jump_pow: number
 
   constructor(sprite: HTMLImageElement, parent: UniversalFrame) {
     this.mush_size = 0
@@ -31,6 +32,7 @@ class Purin {
     this.draw_frame = new Frame('purin_draw', this.frame, [-20, -32])
     this.face_frame = new Frame('purin_face', this.draw_frame)
     this.jump_vec = [0, 0]
+    this.jump_pow = 0
 
     this.aidle = new Anime(sprite, {
       topLeft: [0, 0],
@@ -45,7 +47,7 @@ class Purin {
   }
 
   direct(d: number) {
-    this.face_frame.pos = [d, 0]
+    this.face_frame.pos[0] = d
   }
 
   mush(i: number | ((s: number) => number)) {
@@ -56,13 +58,21 @@ class Purin {
   crouch() {
     if (this.state === State.Idle) {
       this.state = State.Crouching
+      this.jump_pow = 0
     }
   }
 
   jump() {
     if (this.state === State.Crouching) {
       this.state = State.Jumping
-      this.jump_vec = [this.face_frame.pos[0] * 2, 0]
+      if (this.jump_pow === 0) {
+        return
+      }
+      this.jump_vec = [
+        this.face_frame.pos[0] * 2,
+        -Math.ceil(this.jump_pow) * 4,
+      ]
+      this.face_frame.pos[1] = 0
     }
   }
 
@@ -72,15 +82,20 @@ class Purin {
         this.aidle.tick()
         break
       case State.Crouching:
-        this.aidle.tick(10)
+        this.aidle.tick(7 + Math.floor((3 * this.jump_pow) / jump_max))
         this.ajump.tick(0)
+        this.jump_pow =
+          this.jump_pow < jump_max ? this.jump_pow + 0.5 : jump_max
+        this.face_frame.pos[1] = Math.round(this.jump_pow / 4)
         break
       case State.Jumping:
-        this.floor_frame.pos[1] = jump_y[this.ajump.frame]
+        this.ajump.tick()
         this.floor_frame.pos[0] += this.jump_vec[0]
-        if (this.ajump.tick() === 0) {
+        this.frame.pos[1] += this.jump_vec[1]
+        this.jump_vec[1] += 4
+        if (this.frame.pos[1] > 0) {
           this.state = State.Idle
-          this.floor_frame.pos[1] = 0
+          this.frame.pos[1] = 0
           this.jump_vec = [0, 0]
         }
         break
